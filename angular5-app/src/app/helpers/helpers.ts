@@ -1,87 +1,56 @@
 import { Injectable } from '@angular/core';
-
-// import { Observable } from 'rxjs';
-
-// import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 
 export class Helpers  {
 
-    //private authenticationChanged = new Subject<boolean>();
+    private authenticationChanged = new Subject<boolean>();
 
     constructor() {
-
-       
-
     }
 
-    // public isAuthenticated():boolean {
+    public isAuthenticated():boolean {
+        return (!(window.localStorage['token'] === undefined || 
+            window.localStorage['token'] === null ||
+            window.localStorage['token'] === 'null' ||
+            window.localStorage['token'] === 'undefined' ||
+            window.localStorage['token'] === ''));
+    }
 
-    //     return (!(window.localStorage['token'] === undefined || 
+    public isAuthenticationChanged():any {
+        return this.authenticationChanged.asObservable();
+    }
 
-    //         window.localStorage['token'] === null ||
+    public getToken():any {
+        if( window.localStorage['token'] === undefined || 
+            window.localStorage['token'] === null ||
+            window.localStorage['token'] === 'null' ||
+            window.localStorage['token'] === 'undefined' ||
+            window.localStorage['token'] === '') {
+            return '';
+        }
 
-    //         window.localStorage['token'] === 'null' ||
+        let obj = JSON.parse(window.localStorage['token']);
+        return obj.token;
+    }
 
-    //         window.localStorage['token'] === 'undefined' ||
+    public setToken(data:any):void {
+        this.setStorageToken(JSON.stringify(data));
+    }
 
-    //         window.localStorage['token'] === ''));
+    public failToken():void {
+        this.setStorageToken(undefined);
+    }
 
-    // }
+    public logout():void {
+        this.setStorageToken(undefined);
+    }
 
-    // public isAuthenticationChanged():any {
-
-    //     return this.authenticationChanged.asObservable();
-
-    // }
-
-    // public getToken():any {
-
-    //     if( window.localStorage['token'] === undefined || 
-
-    //         window.localStorage['token'] === null ||
-
-    //         window.localStorage['token'] === 'null' ||
-
-    //         window.localStorage['token'] === 'undefined' ||
-
-    //         window.localStorage['token'] === '') {
-
-    //         return '';
-
-    //     }
-
-    //     let obj = JSON.parse(window.localStorage['token']);
-
-    //     return obj.token;
-
-    // }
-
-    // public setToken(data:any):void {
-
-    //     this.setStorageToken(JSON.stringify(data));
-
-    // }
-
-    // public failToken():void {
-
-    //     this.setStorageToken(undefined);
-
-    // }
-
-    // public logout():void {
-
-    //     this.setStorageToken(undefined);
-
-    // }
-
-    // private setStorageToken(value: any):void {
-
-    //     window.localStorage['token'] = value;
-
-    //     this.authenticationChanged.next(this.isAuthenticated());
-
-    // }
+    private setStorageToken(value: any):void {
+        window.localStorage['token'] = value;
+        this.authenticationChanged.next(this.isAuthenticated());
+    }
 
 }

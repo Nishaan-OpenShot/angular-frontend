@@ -30,18 +30,18 @@ export class BaseService {
 
       public header() {
         let header = new HttpHeaders({ 'Content-Type': 'application/json' });
-        // if(this.helper.isAuthenticated()) {
-        //   header = header.append('Authorization', 'Bearer ' + this.helper.getToken()); 
-        // }
+        if(this.helper.isAuthenticated()) {
+          header = header.append('Authorization', 'Bearer ' + this.helper.getToken()); 
+        }
         return { headers: header };
       }   
 
       public setToken(data:any) {
-        //this.helper.setToken(data);
+        this.helper.setToken(data);
       }
 
       public failToken(error: Response | any) {
-        //this.helper.failToken();
+        this.helper.failToken();
         return this.handleError(Response);
       }
     }
